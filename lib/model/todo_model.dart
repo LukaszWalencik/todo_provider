@@ -21,3 +21,5 @@ class Todo extends Equatable {
   @override
   bool get stringify => true;
 }
+
+enum Filter { all, active, completed }
