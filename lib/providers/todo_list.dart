@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import 'package:todo_provider/model/todo_model.dart';
 
@@ -28,5 +29,17 @@ class TodoListState extends Equatable {
     return TodoListState(
       todos: todos ?? this.todos,
     );
+  }
+}
+
+class TodoList with ChangeNotifier {
+  TodoListState _state = TodoListState.initial();
+  TodoListState get state => _state;
+
+  void addTodo(String toDoDesc) {
+    final newTodo = Todo(desc: toDoDesc);
+    final newTodos = [..._state.todos, newTodo];
+    _state = _state.copyWith(todos: newTodos);
+    notifyListeners();
   }
 }
