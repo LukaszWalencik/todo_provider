@@ -10,10 +10,28 @@ class TodosPage extends StatefulWidget {
 class _TodosPageState extends State<TodosPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('TODOS'),
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+            child: Column(
+              children: [
+                TodoHeader(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
+  }
+}
+
+class TodoHeader extends StatelessWidget {
+  const TodoHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
