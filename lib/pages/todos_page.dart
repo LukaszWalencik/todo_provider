@@ -32,6 +32,18 @@ class TodoHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'TODO',
+          style: TextStyle(fontSize: 40),
+        ),
+        Text(
+          '0 items left',
+          style: TextStyle(fontSize: 20, color: Colors.redAccent),
+        )
+      ],
+    );
   }
 }
