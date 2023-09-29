@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_provider/model/todo_model.dart';
 import 'package:todo_provider/providers/active_todo_count.dart';
+import 'package:todo_provider/providers/filtered_todos.dart';
 import 'package:todo_provider/providers/todo_filter.dart';
 import 'package:todo_provider/providers/todo_list.dart';
 import 'package:todo_provider/providers/todo_search_state.dart';
@@ -27,6 +28,8 @@ class _TodosPageState extends State<TodosPage> {
                 CreateTodo(),
                 SizedBox(height: 20),
                 SearchAndFilterTodo(),
+                SizedBox(height: 10),
+                ShowTodos(),
               ],
             ),
           ),
@@ -138,5 +141,29 @@ class SearchAndFilterTodo extends StatelessWidget {
   Color textColor(BuildContext context, Filter filter) {
     final currentFilter = context.watch<TodoFilter>().state.filter;
     return currentFilter == filter ? Colors.blue : Colors.grey;
+  }
+}
+
+class ShowTodos extends StatelessWidget {
+  const ShowTodos({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final todos = context.watch<FilteredTodos>().state.filteredTodos;
+    return ListView.separated(
+        shrinkWrap: true,
+        primary: false,
+        itemBuilder: (BuildContext context, int index) {
+          return Text(
+            todos[index].desc,
+            style: TextStyle(fontSize: 20),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return Divider(
+            color: Colors.grey,
+          );
+        },
+        itemCount: todos.length);
   }
 }
