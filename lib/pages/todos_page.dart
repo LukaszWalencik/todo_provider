@@ -174,6 +174,28 @@ class ShowTodos extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return Dismissible(
               key: ValueKey(todos[index].id),
+              confirmDismiss: (_) {
+                return showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Are you sure?'),
+                        content: Text('Are you really want to delete?'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context, false);
+                              },
+                              child: Text('No')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                              },
+                              child: Text('Yes'))
+                        ],
+                      );
+                    });
+              },
               background: showBackground(0),
               secondaryBackground: showBackground(1),
               onDismissed: (_) {
