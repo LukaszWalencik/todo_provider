@@ -8,6 +8,7 @@ import 'package:todo_provider/providers/filtered_todos.dart';
 import 'package:todo_provider/providers/todo_filter.dart';
 import 'package:todo_provider/providers/todo_list.dart';
 import 'package:todo_provider/providers/todo_search_state.dart';
+import 'package:todo_provider/utilits/debouce.dart';
 
 class TodosPage extends StatefulWidget {
   const TodosPage({super.key});
@@ -94,7 +95,8 @@ class _CreateTodoState extends State<CreateTodo> {
 }
 
 class SearchAndFilterTodo extends StatelessWidget {
-  const SearchAndFilterTodo({super.key});
+  final debounce = Debounce(miliseconds: 1000);
+  SearchAndFilterTodo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +110,9 @@ class SearchAndFilterTodo extends StatelessWidget {
               prefixIcon: Icon(Icons.search)),
           onChanged: (String? newSearchTerm) {
             if (newSearchTerm != null) {
-              context.read<TodoSearch>().setSearchTerm(newSearchTerm);
+              debounce.run(() {
+                context.read<TodoSearch>().setSearchTerm(newSearchTerm);
+              });
             }
           },
         ),
