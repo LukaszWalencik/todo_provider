@@ -225,9 +225,66 @@ class TodoItem extends StatefulWidget {
 }
 
 class _TodoItemState extends State<TodoItem> {
+  late final TextEditingController textEditingController;
+  @override
+  void initState() {
+    textEditingController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              bool _error = false;
+              textEditingController.text = widget.todo.desc;
+              return StatefulBuilder(
+                builder: (context, setState) {
+                  return AlertDialog(
+                    title: Text('Edit Todo'),
+                    content: TextField(
+                      controller: textEditingController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                          errorText: _error ? 'Value cannot be empty' : null),
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('Cancel')),
+                      TextButton(
+                          onPressed: () {
+                            setState(
+                              () {
+                                _error = textEditingController.text.isEmpty
+                                    ? true
+                                    : false;
+                                if (!_error) {
+                                  context.read<TodoList>().editTodo(
+                                      widget.todo.id,
+                                      textEditingController.text);
+                                  Navigator.pop(context);
+                                  print(textEditingController.text);
+                                }
+                              },
+                            );
+                          },
+                          child: Text('Edit'))
+                    ],
+                  );
+                },
+              );
+            });
+      },
       leading: Checkbox(
           value: widget.todo.isComplete,
           onChanged: (bool? checked) {
