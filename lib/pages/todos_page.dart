@@ -1,5 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:todo_provider/model/todo_model.dart';
 import 'package:todo_provider/providers/active_todo_count.dart';
 import 'package:todo_provider/providers/filtered_todos.dart';
@@ -171,14 +173,13 @@ class ShowTodos extends StatelessWidget {
         primary: false,
         itemBuilder: (BuildContext context, int index) {
           return Dismissible(
-            key: ValueKey(todos[index].id),
-            background: showBackground(0),
-            secondaryBackground: showBackground(1),
-            child: Text(
-              todos[index].desc,
-              style: TextStyle(fontSize: 20),
-            ),
-          );
+              key: ValueKey(todos[index].id),
+              background: showBackground(0),
+              secondaryBackground: showBackground(1),
+              onDismissed: (_) {
+                context.read<TodoList>().removeTodo(todos[index]);
+              },
+              child: TodoItem(todo: todos[index]));
         },
         separatorBuilder: (BuildContext context, int index) {
           return Divider(
@@ -186,5 +187,27 @@ class ShowTodos extends StatelessWidget {
           );
         },
         itemCount: todos.length);
+  }
+}
+
+class TodoItem extends StatefulWidget {
+  final Todo todo;
+  const TodoItem({
+    Key? key,
+    required this.todo,
+  }) : super(key: key);
+
+  @override
+  State<TodoItem> createState() => _TodoItemState();
+}
+
+class _TodoItemState extends State<TodoItem> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Checkbox(
+          value: widget.todo.isComplete, onChanged: (bool? checked) {}),
+      title: Text(widget.todo.desc),
+    );
   }
 }
