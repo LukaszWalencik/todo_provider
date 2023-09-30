@@ -177,6 +177,7 @@ class ShowTodos extends StatelessWidget {
               confirmDismiss: (_) {
                 return showDialog(
                     context: context,
+                    barrierDismissible: false,
                     builder: (context) {
                       return AlertDialog(
                         title: Text('Are you sure?'),
@@ -228,7 +229,10 @@ class _TodoItemState extends State<TodoItem> {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Checkbox(
-          value: widget.todo.isComplete, onChanged: (bool? checked) {}),
+          value: widget.todo.isComplete,
+          onChanged: (bool? checked) {
+            context.read<TodoList>().toggleTodo(widget.todo.id);
+          }),
       title: Text(widget.todo.desc),
     );
   }
