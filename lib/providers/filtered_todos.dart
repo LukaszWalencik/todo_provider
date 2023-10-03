@@ -33,34 +33,10 @@ class FilteredTodosState extends Equatable {
   }
 }
 
-class FilteredTodos extends StateNotifier with LocatorMixin {
+class FilteredTodos extends StateNotifier<FilteredTodosState>
+    with LocatorMixin {
   FilteredTodos() : super(FilteredTodosState.initial());
 
-  // FilteredTodosState get state {
-  //   List<Todo> _filteredTodos;
-  //   switch (todoFilter.state.filter) {
-  //     case Filter.active:
-  //       _filteredTodos = todoList.state.todos
-  //           .where((Todo todo) => !todo.isComplete)
-  //           .toList();
-  //       break;
-  //     case Filter.completed:
-  //       _filteredTodos =
-  //           todoList.state.todos.where((Todo todo) => todo.isComplete).toList();
-  //       break;
-  //     case Filter.all:
-  //     default:
-  //       _filteredTodos = todoList.state.todos;
-  //       break;
-  //   }
-  //   if (todoSearch.state.searchTerm.isNotEmpty) {
-  //     _filteredTodos = todoList.state.todos
-  //         .where((Todo todo) =>
-  //             todo.desc.toLowerCase().contains(todoSearch.state.searchTerm))
-  //         .toList();
-  //   }
-  //   return FilteredTodosState(filteredTodos: _filteredTodos);
-  // }
   @override
   void update(Locator watch) {
     final Filter filter = watch<TodoFilterState>().filter;
