@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:state_notifier/state_notifier.dart';
 
 import 'package:todo_provider/model/todo_model.dart';
 import 'package:todo_provider/providers/todo_filter.dart';
@@ -32,39 +33,60 @@ class FilteredTodosState extends Equatable {
   }
 }
 
-class FilteredTodos {
-  final TodoFilter todoFilter;
-  final TodoSearch todoSearch;
-  final TodoList todoList;
-  FilteredTodos({
-    required this.todoFilter,
-    required this.todoSearch,
-    required this.todoList,
-  });
+class FilteredTodos extends StateNotifier with LocatorMixin {
+  FilteredTodos() : super(FilteredTodosState.initial());
 
-  FilteredTodosState get state {
+  // FilteredTodosState get state {
+  //   List<Todo> _filteredTodos;
+  //   switch (todoFilter.state.filter) {
+  //     case Filter.active:
+  //       _filteredTodos = todoList.state.todos
+  //           .where((Todo todo) => !todo.isComplete)
+  //           .toList();
+  //       break;
+  //     case Filter.completed:
+  //       _filteredTodos =
+  //           todoList.state.todos.where((Todo todo) => todo.isComplete).toList();
+  //       break;
+  //     case Filter.all:
+  //     default:
+  //       _filteredTodos = todoList.state.todos;
+  //       break;
+  //   }
+  //   if (todoSearch.state.searchTerm.isNotEmpty) {
+  //     _filteredTodos = todoList.state.todos
+  //         .where((Todo todo) =>
+  //             todo.desc.toLowerCase().contains(todoSearch.state.searchTerm))
+  //         .toList();
+  //   }
+  //   return FilteredTodosState(filteredTodos: _filteredTodos);
+  // }
+  @override
+  void update(Locator watch) {
+    final Filter filter = watch<TodoFilterState>().filter;
+    final String searchTerm = watch<TodoSearchState>().searchTerm;
+    final List<Todo> todos = watch<TodoListState>().todos;
+
     List<Todo> _filteredTodos;
-    switch (todoFilter.state.filter) {
+    switch (filter) {
       case Filter.active:
-        _filteredTodos = todoList.state.todos
-            .where((Todo todo) => !todo.isComplete)
-            .toList();
+        _filteredTodos = todos.where((Todo todo) => !todo.isComplete).toList();
         break;
       case Filter.completed:
-        _filteredTodos =
-            todoList.state.todos.where((Todo todo) => todo.isComplete).toList();
+        _filteredTodos = todos.where((Todo todo) => todo.isComplete).toList();
         break;
       case Filter.all:
       default:
-        _filteredTodos = todoList.state.todos;
+        _filteredTodos = todos;
         break;
     }
-    if (todoSearch.state.searchTerm.isNotEmpty) {
-      _filteredTodos = todoList.state.todos
-          .where((Todo todo) =>
-              todo.desc.toLowerCase().contains(todoSearch.state.searchTerm))
+    if (searchTerm.isNotEmpty) {
+      _filteredTodos = todos
+          .where((Todo todo) => todo.desc.toLowerCase().contains(searchTerm))
           .toList();
     }
-    return FilteredTodosState(filteredTodos: _filteredTodos);
+
+    state = state.copyWith(filteredTodos: _filteredTodos);
+    super.update(watch);
   }
 }
