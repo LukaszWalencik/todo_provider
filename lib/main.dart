@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_provider/pages/todos_page.dart';
 import 'package:todo_provider/providers/active_todo_count.dart';
@@ -19,23 +20,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<TodoFilter>(create: (context) => TodoFilter()),
-        ChangeNotifierProvider<TodoSearch>(create: (context) => TodoSearch()),
-        ChangeNotifierProvider<TodoList>(create: (context) => TodoList()),
-        ProxyProvider<TodoList, ActiveTodoCount>(
-            update: (BuildContext context, TodoList todoList,
-                    ActiveTodoCount? activeTodoCount) =>
-                ActiveTodoCount(todoList: todoList)),
-        ProxyProvider3<TodoSearch, TodoList, TodoFilter, FilteredTodos>(
-            update: (BuildContext context,
-                    TodoSearch todoSearch,
-                    TodoList todoList,
-                    TodoFilter todoFilter,
-                    FilteredTodos? filteredTodos) =>
-                FilteredTodos(
-                    todoFilter: todoFilter,
-                    todoSearch: todoSearch,
-                    todoList: todoList))
+        StateNotifierProvider<TodoFilter, TodoFilterState>(
+            create: (context) => TodoFilter()),
+        StateNotifierProvider<TodoSearch, TodoSearchState>(
+            create: (context) => TodoSearch()),
+        StateNotifierProvider<TodoList, TodoListState>(
+            create: (context) => TodoList()),
+        StateNotifierProvider<ActiveTodoCount, ActiveTodoCountState>(
+            create: (context) => ActiveTodoCount()),
+        StateNotifierProvider<FilteredTodos, FilteredTodosState>(
+            create: (context) => FilteredTodos()),
       ],
       child: MaterialApp(
           title: 'Todos',
